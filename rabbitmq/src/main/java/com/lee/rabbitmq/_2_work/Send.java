@@ -1,4 +1,4 @@
-package com.lee.rabbitmq.work2;
+package com.lee.rabbitmq._2_work;
 
 import com.lee.rabbitmq.util.RabbitMQUtils;
 import com.rabbitmq.client.Channel;
@@ -11,11 +11,10 @@ import java.util.concurrent.TimeoutException;
 /**
  * @author WangLe
  * @date 2019/10/28 14:40
- * @description 这种处理方式是 "公平分发" ,消费者收到消息处理完以后,给发送者一个应答,告诉发送者,我已经处理完这条消息了,接着发送者
- * 就会发送下一条消息过来,这样显著的特点就是:处理消息快的消费者就会处理更多的消息
+ * @description 这种处理方式是 "轮询分发" ,消费者接收到的消息数量都是一样的,你一个我一个,不会因为谁处理消息消耗时间短而处理消息会变多
  */
 public class Send {
-    public static final String QUEUE_NAME = "work_queue_2";
+    public static final String QUEUE_NAME = "work_queue_1";
 
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
         try (
@@ -24,13 +23,7 @@ public class Send {
                 // 获取通道
                 Channel channel = connection.createChannel();
         ) {
-            // 设置持久化标识为true即可
-            boolean durable = true;
-            channel.queueDeclare(QUEUE_NAME, durable, false, false, null);
-            // 保证一次只分发一条消息
-            int prefetchCount = 1;
-            channel.basicQos(prefetchCount);
-
+            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             for (int i = 0; i < 50; i++) {
                 String msg = "hello " + i;
                 channel.basicPublish("", QUEUE_NAME, null, msg.getBytes());

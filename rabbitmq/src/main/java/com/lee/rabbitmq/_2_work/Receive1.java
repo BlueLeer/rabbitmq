@@ -1,4 +1,4 @@
-package com.lee.rabbitmq.work2;
+package com.lee.rabbitmq._2_work;
 
 import com.lee.rabbitmq.util.RabbitMQUtils;
 import com.rabbitmq.client.*;
@@ -12,40 +12,36 @@ import java.util.concurrent.TimeoutException;
  * @date 2019/10/28 14:45
  * @description
  */
-public class Receive2 {
+public class Receive1 {
 
-    public static final String QUEUE_NAME = "work_queue_2";
+    public static final String QUEUE_NAME = "work_queue_1";
 
     public static void main(String[] args) throws IOException, TimeoutException {
         // 获取连接
         Connection connection = RabbitMQUtils.getConnection();
         // 获取通道
         Channel channel = connection.createChannel();
-        // 该队列已经在发送者里面定义了,所以这里不用重复的声明
-//        channel.queueDeclare(QUEUE_NAME, true, false, false, null);
-        // 一次只消费一个消息,也就是说生产者一次只发送一条消息
-        int prefetchCount = 1;
-        channel.basicQos(prefetchCount);
-
+        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         // 定义一个消息的消费者
         DefaultConsumer consumer = new DefaultConsumer(channel) {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 String msg = new String(body, "UTF-8");
-                System.out.printf("[receive 2] %s \n", msg);
+                System.out.printf("[receive 1] %s \n", msg);
                 // 休眠1秒,模拟收到消息以后进行的逻辑处理
                 try {
-                    TimeUnit.SECONDS.sleep(3);
+                    TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                } finally {
-                    System.out.printf("[receive 2] 收到的 delivery tag为: %n", envelope.getDeliveryTag());
-                    // 手动确认消息【参数说明，参数1：该消息的index；参数2：是否批量应答，true：批量确认消息index的消息】
-                    channel.basicAck(envelope.getDeliveryTag(), false);
                 }
+
             }
         };
-        // 消息的确认模式:手动确认
+        // 消息的确认模式:手动应答
+        /* 如果消息的确认模式为手动应答时,当接收到消息以后,如果没有应答(即调用channel.basicAck(envelope.getDeliveryTag(),false);)
+        Rabbit将不会发送更多的消息给该消费者了,这是因为Rabbit认为你没有做好接收消息的准备(待验证,当前项目中验证失败)
+        消息就会在队列中从Ready变为Unacked状态,
+        */
         boolean autoAck = false;
         channel.basicConsume(QUEUE_NAME, autoAck, consumer);
     }
