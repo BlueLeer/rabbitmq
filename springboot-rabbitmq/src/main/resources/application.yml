@@ -1,0 +1,15 @@
+spring:
+  rabbitmq:
+    host: 122.51.109.246
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      direct:
+        acknowledge-mode: manual # 对于direct交换机来说,消费者接收到消息以后需要手动确认,也就是关闭了自动应答
+
+lee:
+  rabbitmq:
+    queue-timer: queue_timer
+    queue-date: queue_date
