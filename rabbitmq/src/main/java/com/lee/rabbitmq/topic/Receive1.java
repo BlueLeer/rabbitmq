@@ -24,7 +24,7 @@ public class Receive1 {
         Channel channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME_1, false, false, false, null);
         // 绑定队列到交换机
-        channel.queueBind(QUEUE_NAME_1, EXCHANGE_NAME, "item.#");
+        channel.queueBind(QUEUE_NAME_1, EXCHANGE_NAME, "order.*.delete");
         // 同一时刻,发送者只会发送一条消息到消费者
         channel.basicQos(1);
 

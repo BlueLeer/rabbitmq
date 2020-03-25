@@ -24,9 +24,10 @@ public class Producer {
         Connection connection = RabbitMQUtils.getConnection();
         // 2. 创建频道(通道)
         Channel channel = connection.createChannel();
+        
         // 3. 声明一个队列
         // 3.0 队列名称
-        String queueName = RabbitMQUtils.QUEUE_NAME;
+        String queueName = "wangdahong";
         // 3.1 发送的消息是否持久化 true(持久化)
         boolean durable = false;
         // 3.2 是否独占模式
@@ -41,10 +42,11 @@ public class Producer {
         for (int i = 0; i < 100; i++) {
             String format = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
             TimeUnit.SECONDS.sleep(1);
-            channel.basicPublish("", RabbitMQUtils.QUEUE_NAME, null, (format + "Hello RabbitMQ").getBytes());
+            channel.basicPublish("", RabbitMQUtils.QUEUE_NAME, null, (format + "Hello RabbitMQ"+i).getBytes());
         }
         channel.close();
         connection.close();
+        
     }
 
     /**
@@ -55,7 +57,7 @@ public class Producer {
      *
      * 当你把消息发送到Rabbit服务器的时候，你需要选择你是否要进行持久化，但这并不能保证Rabbit能从崩溃中恢复，想要Rabbit消息能恢复必须满足3个条件：
      *
-     * 1. 投递消息的时候durable设置为true，消息持久化，代码：channel.queueDeclare(x, true, false, false, null)，参数2设置为true持久化；
+     * 1. 声明队列的时候durable设置为true，消息持久化，代码：channel.queueDeclare(x, true, false, false, null)，参数2设置为true持久化；
      * 2. 设置投递模式deliveryMode设置为2（持久），代码：channel.basicPublish(x, x, MessageProperties.PERSISTENT_TEXT_PLAIN,x)，参数3设置为存储纯文本到磁盘；
      * 3. 消息已经到达持久化交换器上；
      * 4. 消息已经到达持久化的队列；

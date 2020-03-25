@@ -22,7 +22,7 @@ public class Receive1 {
         // 获取通道
         Channel channel = connection.createChannel();
         // 该队列已经在发送者的代码中声明了,所以在这里可以不用声明该队列
-//        channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+        channel.queueDeclare(QUEUE_NAME, true, false, false, null);
         // 一次只消费一个消息,也就是说生产者一次只发送一条消息
         int prefetchCount = 1;
         channel.basicQos(prefetchCount);
@@ -39,13 +39,18 @@ public class Receive1 {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-                    System.out.printf("[receive 1] 收到的 delivery tag为: %n", envelope.getDeliveryTag());
+                    System.out.printf("[receive 1无应答] 收到的 delivery tag为: %n", envelope.getDeliveryTag());
                     // 手动确认消息【参数说明，参数1：该消息的index；参数2：是否批量应答，true：批量确认消息index的消息】
-                    channel.basicAck(envelope.getDeliveryTag(), false);
+//                    channel.basicAck(envelope.getDeliveryTag(), false);
                 }
             }
         };
-        // 消息的确认模式:手动确认
+
+        // 消息的确认模式:手动应答
+        /* 如果消息的确认模式为手动应答时,当接收到消息以后,如果没有应答(即调用channel.basicAck(envelope.getDeliveryTag(),false);)
+        Rabbit将不会发送更多的消息给该消费者了,这是因为Rabbit认为你没有做好接收消息的准备(待验证,当前项目中验证失败)
+        消息就会在队列中从Ready变为Unacked状态,
+        */
         boolean autoAck = false;
         channel.basicConsume(QUEUE_NAME, autoAck, consumer);
     }

@@ -9,6 +9,17 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * 生产者将信道设置成 confirm 模式，一旦信道进入 confirm 模式，所有在该信道上面发布的消息都会被指派一个唯
+ * 一的 ID(从 1 开始)，一旦消息被投递到所有匹配的队列之后，broker 就会发送一个确认给生产者（包含消息的唯一
+ * ID）,这就使得生产者知道消息已经正确到达目的队列了，如果消息和队列是可持久化的，那么确认消息会将消息写
+ * 入磁盘之后发出，broker 回传给生产者的确认消息中 deliver-tag 域包含了确认消息的序列号，此外 broker 也可以设
+ * 置 basic.ack 的 multiple 域，表示到这个序列号之前的所有消息都已经得到了处理。
+ * 
+ * confirm 模式最大的好处在于他是异步的，一旦发布一条消息，生产者应用程序就可以在等信道返回确认的同时继
+ * 续发送下一条消息，当消息最终得到确认之后，生产者应用便可以通过回调方法来处理该确认消息，如果
+ * RabbitMQ 因为自身内部错误导致消息丢失，就会发送一条 nack 消息，生产者应用程序同样可以在回调方法中处
+ * 理该 nack 消息。
+ *
  * @author WangLe
  * @date 2019/10/29 12:16
  * @description 发送方确认模式 confirm
@@ -68,7 +79,7 @@ public class Send {
             channel.basicPublish("", QUEUE_NAME_2, null, msg.getBytes());
         }
 
-        // 等所有的消息发送成功以后才会执行后面的代码,只要有一小消息没有发送确认,就会抛出异常
+        // 等所有的消息发送成功以后才会执行后面的代码,只要有一条消息没有发送确认,就会抛出异常
         try {
             channel.waitForConfirmsOrDie();
         } catch (InterruptedException e) {

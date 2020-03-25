@@ -1,4 +1,4 @@
-package com.lee.rabbitmq.ps;
+package com.lee.rabbitmq.pubsub;
 
 import com.lee.rabbitmq.util.RabbitMQUtils;
 import com.rabbitmq.client.BuiltinExchangeType;

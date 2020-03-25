@@ -34,7 +34,7 @@ import java.util.concurrent.TimeoutException;
  * 来源：简书
  */
 public class Send {
-    public static final String QUEUE_NAME = "tx_queue_name_1";
+    public static final String QUEUE_NAME = "tx_queue_name_11";
 
     public static void main(String[] args) throws IOException, TimeoutException {
         try (
@@ -42,15 +42,16 @@ public class Send {
                 Channel channel = connection.createChannel()
         ) {
             // 声明队列
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+//            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             try {
                 // 开启事务
                 channel.txSelect();
                 String msg = "hello tx!";
                 channel.basicPublish("", QUEUE_NAME, null, msg.getBytes());
-                int i = 1 / 0;
+//                int i = 1 / 0;
                 channel.txCommit();
             } catch (Exception e) {
+                e.printStackTrace();
                 channel.txRollback();
                 System.out.println("[send tx] 出现错误!");
             }

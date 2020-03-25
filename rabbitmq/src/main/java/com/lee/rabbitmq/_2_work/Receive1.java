@@ -37,12 +37,8 @@ public class Receive1 {
 
             }
         };
-        // 消息的确认模式:手动应答
-        /* 如果消息的确认模式为手动应答时,当接收到消息以后,如果没有应答(即调用channel.basicAck(envelope.getDeliveryTag(),false);)
-        Rabbit将不会发送更多的消息给该消费者了,这是因为Rabbit认为你没有做好接收消息的准备(待验证,当前项目中验证失败)
-        消息就会在队列中从Ready变为Unacked状态,
-        */
-        boolean autoAck = false;
+        // 自动应答
+        boolean autoAck = true;
         channel.basicConsume(QUEUE_NAME, autoAck, consumer);
     }
 

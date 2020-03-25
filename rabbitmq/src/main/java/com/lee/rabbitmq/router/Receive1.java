@@ -20,7 +20,7 @@ public class Receive1 {
         Connection connection = RabbitMQUtils.getConnection();
         Channel channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME_1, false, false, false, null);
-        // 绑定队列到交换机
+        // 绑定队列到交换机,交换机的类型为默认的Direct交换机,它的路由模式是:根据routingKey匹配到对应的队列,然后将消息发送到队列中去
         channel.queueBind(QUEUE_NAME_1, EXCHANGE_NAME, "delete");
         // 同一时刻,发送者只会发送一条消息到消费者
         channel.basicQos(1);

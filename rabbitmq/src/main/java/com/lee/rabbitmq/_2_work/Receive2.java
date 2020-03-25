@@ -36,8 +36,8 @@ public class Receive2 {
                 }
             }
         };
-        // 消息的确认模式:手动应答
-        boolean autoAck = false;
+        // 自动应答
+        boolean autoAck = true;
         channel.basicConsume(QUEUE_NAME, autoAck, consumer);
     }
 

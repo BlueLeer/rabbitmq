@@ -30,8 +30,8 @@ public class Send {
             channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.TOPIC);
 
             for (int i = 0; i < 10; i++) {
-                String routingKey = i % 2 == 0 ? "item.delete" : "item.add";
-                String message = routingKey.equals("item.delete") ? "商品删除了:" + i : "商品添加了:" + i;
+                String routingKey = i % 2 == 0 ? "order.a.delete.lee" : "item.add.lee";
+                String message = routingKey.equals("order.a.delete.lee") ? "商品删除了:" + i : "商品添加了:" + i;
                 channel.basicPublish(EXCHANGE_NAME, routingKey, null, message.getBytes());
                 System.out.printf("[send msg] %S \n", message);
                 TimeUnit.SECONDS.sleep(1);

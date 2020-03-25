@@ -1,4 +1,4 @@
-package com.lee.rabbitmq.ps;
+package com.lee.rabbitmq.pubsub;
 
 import com.lee.rabbitmq.util.RabbitMQUtils;
 import com.rabbitmq.client.*;
@@ -12,9 +12,9 @@ import java.util.concurrent.TimeoutException;
  * @date 2019/10/28 16:12
  * @description
  */
-public class Receive1 {
+public class Receive2 {
     public static final String EXCHANGE_NAME = "ps_exchange_1";
-    public static final String QUEUE_NAME_1 = "exchange_queue_name_1";
+    public static final String QUEUE_NAME_1 = "exchange_queue_name_2";
 
     public static void main(String[] args) throws IOException, TimeoutException {
         Connection connection = RabbitMQUtils.getConnection();
@@ -29,7 +29,7 @@ public class Receive1 {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 String msg = new String(body, "UTF-8");
-                System.out.printf("[receive 1] %s \n", msg);
+                System.out.printf("[receive 2] %s \n", msg);
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {

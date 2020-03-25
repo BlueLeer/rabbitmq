@@ -1,3 +1,3 @@
 ##简单队列
 
-[](src/main/resources/简单队列原理图.png)
+![简单队列原理图](../../../../../resources/简单队列原理图.png)
