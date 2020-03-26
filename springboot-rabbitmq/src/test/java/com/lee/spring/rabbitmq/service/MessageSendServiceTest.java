@@ -20,7 +20,7 @@ public class MessageSendServiceTest {
     @Test
     public void sendMsg() {
         messageSendService.sendMsg("sendMsg: hello");
-        messageSendService.sendMsgWithResp("sendMsgWithResp: hello");
+        messageSendService.sendMsgWithResult("sendMsgWithResp: hello");
     }
 
 }

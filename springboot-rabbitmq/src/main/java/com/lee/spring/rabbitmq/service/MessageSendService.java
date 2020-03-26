@@ -7,5 +7,5 @@ package com.lee.spring.rabbitmq.service;
 public interface MessageSendService {
     void sendMsg(String message);
 
-    void sendMsgWithResp(String message);
+    String sendMsgWithResult(Object message);
 }

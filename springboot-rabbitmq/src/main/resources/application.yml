@@ -6,10 +6,24 @@ spring:
     password: guest
     virtual-host: /
     listener:
-      direct:
-        acknowledge-mode: manual # 对于direct交换机来说,消费者接收到消息以后需要手动确认,也就是关闭了自动应答
+      #      direct:
+      #        acknowledge-mode: manual # 对于direct交换机来说,消费者接收到消息以后需要手动确认,也就是关闭了自动应答
+      simple:
+        # NONE：无消费方确认,即表示消费方自动确认,等同于RabbitMQ的autoAck=true
+        # MANNUAL：消费方手动确认，用户需要自行调用ack/nack操作
+        # AUTO：默认值，Spring根据Listener中是否抛出异常来决定是ack还是nack，需要注意的是，这里的AUTO与RabbitMQ的autoAck是不同的东西
+        acknowledge-mode: auto
+    publisher-confirm-type: correlated # 启用生产方确认,注释为:correlate confirmations with sent messsages.将发送方和消息关联起来
+    publisher-returns: true # 开启使用发送方返回
+      
+
+
 
 lee:
   rabbitmq:
     queue-timer: queue_timer
     queue-date: queue_date
+    queue-order-delete: queue_order_delete
+    queue-order-add: queue_order_add
+    queue-order-all: queue_order_all
+    exchange-order-all: exchange_order_all

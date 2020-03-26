@@ -7,5 +7,5 @@ package com.lee.spring.rabbitmq.service;
 public interface MessageReceiveService {
     void process(String msg);
 
-    Boolean processWithResp(String msg);
+    String processWithResp(String msg);
 }

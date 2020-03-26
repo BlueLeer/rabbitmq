@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySources;
  * @date 2020/3/25 23:24
  */
 @Configuration
-public class RabbitConfig {
+public class SimpleRabbitConfig {
     @Value("${lee.rabbitmq.queue-timer}")
     private String timerQueueName;
 
@@ -20,7 +20,8 @@ public class RabbitConfig {
 
     @Bean
     public Queue timerQueue() {
-        return new Queue(timerQueueName);
+        Queue queue = new Queue(timerQueueName);
+        return queue;
     }
 
     @Bean
