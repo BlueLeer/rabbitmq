@@ -13,7 +13,7 @@
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
-            <version>5.5.3</version>
+            <version>5.18.0</version>
         </dependency>
 
         <!--使用log4j的实现,会自动导入slf4j-api和 log4j-1.2.17.jar到项目中-->
